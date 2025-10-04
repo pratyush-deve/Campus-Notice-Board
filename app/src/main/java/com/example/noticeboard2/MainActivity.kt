@@ -78,9 +78,15 @@ fun NoticeScreen() {
 
 @Composable
 fun NoticeBox(notice: String) {
-    val today = remember {
-        java.text.SimpleDateFormat("dd MMM yyyy", java.util.Locale.getDefault())
-            .format(java.util.Date())
+    var today by remember { mutableStateOf("") }
+
+    // Updates date every minute (lightweight enough)
+    LaunchedEffect(Unit) {
+        while (true) {
+            today = java.text.SimpleDateFormat("dd MMM yyyy", java.util.Locale.getDefault())
+                .format(java.util.Date())
+            kotlinx.coroutines.delay(60_000L) // check once per minute
+        }
     }
     Box(
         modifier = Modifier
